@@ -30,6 +30,21 @@
                 "gas": "*",
                 "refund": "*"
             }
+        },
+        {
+            "step": "scQuery",
+            "txId": "check-status",
+            "tx": {
+                "to": "sc:crowdfunding",
+                "function": "status",
+                "arguments": []
+            },
+            "expect": {
+                "out": [
+                    "2"
+                ],
+                "status": "0"
+            }
         }
     ]
 }

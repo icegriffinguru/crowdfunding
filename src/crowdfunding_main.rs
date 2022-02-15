@@ -1,6 +1,14 @@
 #![no_std]
 
 elrond_wasm::imports!();
+elrond_wasm::derive_imports!();
+
+#[derive(TopEncode, TopDecode, TypeAbi, PartialEq, Clone, Copy)]
+pub enum Status {
+    FundingPeriod,
+    Successful,
+    Failed,
+}
 
 #[elrond_wasm::contract]
 pub trait Crowdfunding {
@@ -35,5 +43,21 @@ pub trait Crowdfunding {
         self.deposit(&caller).update(|deposit| *deposit += payment);
 
         Ok(())
+    }
+
+    #[view]
+    fn status(&self) -> Status {
+        if self.blockchain().get_block_nonce() < self.deadline().get() {
+            return Status::FundingPeriod;
+        } else if self.get_current_funds() >= self.target().get() {
+            return Status::Successful;
+        } else {
+            return Status::Failed;
+        }
+    }
+
+    #[view(getCurrentFunds)]
+    fn get_current_funds (&self) -> BigUint {
+        return self.blockchain().get_sc_balance(&TokenIdentifier::egld(), 0);
     }
 }
