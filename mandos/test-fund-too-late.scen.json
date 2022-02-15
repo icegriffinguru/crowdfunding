@@ -1,0 +1,35 @@
+{
+    "name": "trying to fund one block too late",
+    "steps": [
+        {
+            "step": "externalSteps",
+            "path": "crowdfunding-fund.scen.json"
+        },
+        {
+            "step": "setState",
+            "currentBlockInfo": {
+                "blockNonce": "123,001"
+            }
+        },
+        {
+            "step": "scCall",
+            "txId": "fund-too-late",
+            "tx": {
+                "from": "address:donor1",
+                "to": "sc:crowdfunding",
+                "egldValue": "10,000,000,000",
+                "function": "fund",
+                "arguments": [],
+                "gasLimit": "100,000,000",
+                "gasPrice": "0"
+            },
+            "expect": {
+                "out": [],
+                "status": "4",
+                "message": "str:cannot fund after deadline",
+                "gas": "*",
+                "refund": "*"
+            }
+        }
+    ]
+}
